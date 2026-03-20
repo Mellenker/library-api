@@ -1,0 +1,71 @@
+@startuml
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+
+table(users) {
+    primary_key(id): bigint
+    column(name): text
+    column(email): text
+    column(password_hash): text
+    column(role): text
+    column(active): boolean
+    column(created_at): timestamp
+}
+
+table(books) {
+    primary_key(id): bigint
+    column(title): text
+    column(isbn): text
+    column(publication_year): int
+    column(description): text
+    column(cover_image_url): text
+    column(total_copies): integer
+    column(available_copies): integer
+}
+
+table(authors) {
+    primary_key(id): bigint
+    column(name): text
+    column(birth_year): integer
+    column(bio): text
+}
+
+table(genres) {
+    primary_key(id): bigint
+    column(name): text
+}
+
+table(loans) {
+    primary_key(id): bigint
+    foreign_key(user_id): bigint
+    foreign_key(book_id): bigint
+    column(start_date): date
+    column(due_date): date
+    column(returned_at): date
+}
+
+table(reservations) {
+    primary_key(id): bigint
+    foreign_key(user_id): bigint
+    foreign_key(book_id): bigint
+    column(reserved_at): timestamp
+    column(released_at): timestamp
+    column(status): text
+}
+table(books_authors) {
+    foreign_key(book_id): bigint
+    foreign_key(author_id): bigint
+
+}
+users ||--o{ loans
+books }o--|| genres
+loans }o--|| books
+reservations }o--|| books
+users ||--o{ reservations
+books ||--o{ books_authors
+authors ||--o{ books_authors
+
+@enduml
