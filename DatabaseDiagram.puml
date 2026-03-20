@@ -4,7 +4,6 @@
 !define column(x) <color:#efefef><&media-record></color> x
 !define table(x) entity x << (T, white) >>
 
-
 table(users) {
     primary_key(id): bigint
     column(name): text
@@ -55,11 +54,12 @@ table(reservations) {
     column(released_at): timestamp
     column(status): text
 }
+
 table(books_authors) {
     foreign_key(book_id): bigint
     foreign_key(author_id): bigint
-
 }
+
 users ||--o{ loans
 books }o--|| genres
 loans }o--|| books
