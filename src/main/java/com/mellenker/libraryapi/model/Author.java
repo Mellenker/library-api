@@ -9,7 +9,7 @@ public class Author {
 
     private long id;
     private String name;
-    private int birth_year;
+    private int birthYear;
     private String bio;
 
 }
