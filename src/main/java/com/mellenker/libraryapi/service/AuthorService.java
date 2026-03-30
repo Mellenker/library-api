@@ -3,6 +3,7 @@ package com.mellenker.libraryapi.service;
 import com.mellenker.libraryapi.model.Author;
 import com.mellenker.libraryapi.repository.AuthorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
@@ -24,20 +25,20 @@ public class AuthorService {
         return repo.findById(id).orElse(null);
     }
 
-    public void addAuthor(Author author) {
-        repo.save(author);
+    public Long addAuthor(Author author) {
+        return repo.save(author).getId();
     }
 
-    public void updateAuthor(Author author) {
-        repo.save(author);
+    public Author updateAuthor(Author author) {
+        return repo.save(author);
     }
 
     public void deleteAuthor(long id) {
         repo.deleteById(id);
     }
 
-    public void updateAuthorByFields(Long id, Map<String, Object> fields) {
-        Author author = repo.findById(id).orElse(null);
+    public Author updateAuthorByFields(Long id, Map<String, Object> fields) {
+        var author = repo.findById(id).orElse(null);
 
         if (fields.containsKey("name")) {
             author.setName((String) fields.get("name"));
@@ -49,7 +50,7 @@ public class AuthorService {
             author.setBio((String) fields.get("bio"));
         }
 
-        repo.save(author);
+        return repo.save(author);
     }
 
 
