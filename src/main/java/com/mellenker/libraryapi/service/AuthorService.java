@@ -3,6 +3,7 @@ package com.mellenker.libraryapi.service;
 import com.mellenker.libraryapi.dto.AuthorRequest;
 import com.mellenker.libraryapi.dto.AuthorResponse;
 import com.mellenker.libraryapi.exception.AuthorNotFoundException;
+import com.mellenker.libraryapi.mapper.AuthorMapper;
 import com.mellenker.libraryapi.model.Author;
 import com.mellenker.libraryapi.repository.AuthorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,28 +15,30 @@ import java.util.Map;
 @Service
 public class AuthorService {
     private final AuthorRepo repo;
+    private final AuthorMapper mapper;
 
     @Autowired
-    public AuthorService(AuthorRepo repo) {
+    public AuthorService(AuthorRepo repo, AuthorMapper mapper) {
         this.repo = repo;
+        this.mapper = mapper;
     }
 
     public List<AuthorResponse> getAuthors() {
-        return repo.findAll().stream().map(this::mapToResponse).toList();
+        return repo.findAll().stream().map(mapper::toResponse).toList();
     }
 
     public AuthorResponse getAuthorById(long id) {
         Author author = repo.findById(id).orElseThrow(() -> new AuthorNotFoundException(id));
-        return mapToResponse(author);
+        return mapper.toResponse(author);
     }
 
     public AuthorResponse addAuthor(AuthorRequest request) {
-        Author author = mapToEntity(request);
-        return mapToResponse(repo.save(author));
+        Author author = mapper.toEntity(request);
+        return mapper.toResponse(repo.save(author));
     }
 
     public AuthorResponse updateAuthor(Author author) {
-        return mapToResponse(repo.save(author));
+        return mapper.toResponse(repo.save(author));
     }
 
     public void deleteAuthor(long id) {
@@ -56,24 +59,7 @@ public class AuthorService {
             author.setBio((String) fields.get("bio"));
         }
 
-        return mapToResponse(repo.save(author));
-    }
-
-    private Author mapToEntity(AuthorRequest request) {
-        Author author = new Author();
-        author.setName(request.getName());
-        author.setBio(request.getBio());
-        author.setBirthYear(request.getBirthYear());
-        return author;
-    }
-
-    private AuthorResponse mapToResponse(Author author) {
-        AuthorResponse response = new AuthorResponse();
-        response.setId(author.getId());
-        response.setName(author.getName());
-        response.setBio(author.getBio());
-        response.setBirthYear(author.getBirthYear());
-        return response;
+        return mapper.toResponse(repo.save(author));
     }
 
 
