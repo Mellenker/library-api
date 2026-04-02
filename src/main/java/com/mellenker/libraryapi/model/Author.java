@@ -17,7 +17,7 @@ public class Author {
     private Long id;
 
     private String name;
-    private int birthYear;
+    private Integer birthYear;
     private String bio;
 
 }

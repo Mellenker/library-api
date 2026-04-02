@@ -1,5 +1,7 @@
 package com.mellenker.libraryapi.controller;
 
+import com.mellenker.libraryapi.dto.AuthorRequest;
+import com.mellenker.libraryapi.dto.AuthorResponse;
 import com.mellenker.libraryapi.model.Author;
 import com.mellenker.libraryapi.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +14,20 @@ import java.util.Map;
 
 @RestController
 public class AuthorController {
-    @Autowired
     AuthorService service;
 
+    @Autowired
+    AuthorController(AuthorService service) {
+        this.service = service;
+    }
+
     @RequestMapping("/authors")
-    public List<Author> getAuthors() {
+    public List<AuthorResponse> getAuthors() {
         return service.getAuthors();
     }
 
     @RequestMapping("/authors/{id}")
-    public ResponseEntity<Author> geAuthorById(@PathVariable long id) {
+    public ResponseEntity<AuthorResponse> geAuthorById(@PathVariable long id) {
         var author = service.getAuthorById(id);
         if (author == null) {
             return ResponseEntity.notFound().build();
@@ -30,34 +36,34 @@ public class AuthorController {
     }
 
     @PostMapping("/authors")
-    public ResponseEntity<Author> addAuthor(@RequestBody Author author) {
-        Long id = service.addAuthor(author);
-        return ResponseEntity.created(URI.create("/authors/" + id)).body(author);
+    public ResponseEntity<AuthorResponse> addAuthor(@RequestBody AuthorRequest request) {
+        var response = service.addAuthor(request);
+        return ResponseEntity.created(URI.create("/authors/" + response.getId())).body(response);
     }
 
     @DeleteMapping("/authors/{id}")
-    public ResponseEntity<Author> deleteAuthor(@PathVariable long id) {
+    public ResponseEntity<AuthorResponse> deleteAuthor(@PathVariable long id) {
         service.deleteAuthor(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/authors")
-    public ResponseEntity<Author> updateAuthor(@RequestBody Author author) {
-        var updatedAuthor = service.updateAuthor(author);
+    public ResponseEntity<AuthorResponse> updateAuthor(@RequestBody Author author) {
+        var response = service.updateAuthor(author);
 
-        if (updatedAuthor == null) {
+        if (response == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(updatedAuthor);
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/authors/{id}")
-    public ResponseEntity<Author> updateAuthorByFields(@PathVariable long id, @RequestBody Map<String, Object> fields) {
-        var updatedAuthor = service.updateAuthorByFields(id, fields);
+    public ResponseEntity<AuthorResponse> updateAuthorByFields(@PathVariable long id, @RequestBody Map<String, Object> fields) {
+        var response = service.updateAuthorByFields(id, fields);
 
-        if (updatedAuthor == null) {
+        if (response == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(updatedAuthor);
+        return ResponseEntity.ok(response);
     }
 }
