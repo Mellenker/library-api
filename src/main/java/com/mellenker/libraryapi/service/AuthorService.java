@@ -1,13 +1,11 @@
 package com.mellenker.libraryapi.service;
 
+import com.mellenker.libraryapi.exception.AuthorNotFoundException;
 import com.mellenker.libraryapi.model.Author;
 import com.mellenker.libraryapi.repository.AuthorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +20,7 @@ public class AuthorService {
     }
 
     public Author getAuthorById(long id) {
-        return repo.findById(id).orElse(null);
+        return repo.findById(id).orElseThrow(() -> new AuthorNotFoundException(id));
     }
 
     public Long addAuthor(Author author) {
