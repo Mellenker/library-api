@@ -37,10 +37,6 @@ public class AuthorService {
         return mapper.toResponse(repo.save(author));
     }
 
-    public AuthorResponse updateAuthor(Author author) {
-        return mapper.toResponse(repo.save(author));
-    }
-
     public void deleteAuthor(long id) {
         repo.deleteById(id);
     }

@@ -2,7 +2,6 @@ package com.mellenker.libraryapi.controller;
 
 import com.mellenker.libraryapi.dto.AuthorRequest;
 import com.mellenker.libraryapi.dto.AuthorResponse;
-import com.mellenker.libraryapi.model.Author;
 import com.mellenker.libraryapi.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +26,8 @@ public class AuthorController {
     }
 
     @RequestMapping("/authors/{id}")
-    public ResponseEntity<AuthorResponse> geAuthorById(@PathVariable long id) {
-        var author = service.getAuthorById(id);
-        if (author == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(author);
+    public ResponseEntity<AuthorResponse> getAuthorById(@PathVariable long id) {
+        return ResponseEntity.ok(service.getAuthorById(id));
     }
 
     @PostMapping("/authors")
@@ -47,23 +42,9 @@ public class AuthorController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/authors")
-    public ResponseEntity<AuthorResponse> updateAuthor(@RequestBody Author author) {
-        var response = service.updateAuthor(author);
-
-        if (response == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(response);
-    }
-
     @PatchMapping("/authors/{id}")
     public ResponseEntity<AuthorResponse> updateAuthorByFields(@PathVariable long id, @RequestBody Map<String, Object> fields) {
         var response = service.updateAuthorByFields(id, fields);
-
-        if (response == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(response);
     }
 }
