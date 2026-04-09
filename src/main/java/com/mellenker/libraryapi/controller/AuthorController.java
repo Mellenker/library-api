@@ -13,19 +13,19 @@ import java.util.Map;
 
 @RestController
 public class AuthorController {
-    AuthorService service;
+    private final AuthorService service;
 
     @Autowired
     AuthorController(AuthorService service) {
         this.service = service;
     }
 
-    @RequestMapping("/authors")
+    @GetMapping("/authors")
     public List<AuthorResponse> getAuthors() {
         return service.getAuthors();
     }
 
-    @RequestMapping("/authors/{id}")
+    @GetMapping("/authors/{id}")
     public ResponseEntity<AuthorResponse> getAuthorById(@PathVariable long id) {
         return ResponseEntity.ok(service.getAuthorById(id));
     }

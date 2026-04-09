@@ -57,6 +57,4 @@ public class AuthorService {
 
         return mapper.toResponse(repo.save(author));
     }
-
-
 }
