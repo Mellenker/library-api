@@ -2,6 +2,7 @@ package com.mellenker.libraryapi.controller;
 
 import com.mellenker.libraryapi.dto.AuthorRequest;
 import com.mellenker.libraryapi.dto.AuthorResponse;
+import com.mellenker.libraryapi.dto.AuthorUpdateRequest;
 import com.mellenker.libraryapi.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class AuthorController {
@@ -43,8 +43,8 @@ public class AuthorController {
     }
 
     @PatchMapping("/authors/{id}")
-    public ResponseEntity<AuthorResponse> updateAuthorByFields(@PathVariable long id, @RequestBody Map<String, Object> fields) {
-        var response = service.updateAuthorByFields(id, fields);
+    public ResponseEntity<AuthorResponse> updateAuthor(@PathVariable long id, @RequestBody AuthorUpdateRequest request) {
+        var response = service.updateAuthor(id, request);
         return ResponseEntity.ok(response);
     }
 }

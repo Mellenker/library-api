@@ -2,6 +2,7 @@ package com.mellenker.libraryapi.service;
 
 import com.mellenker.libraryapi.dto.AuthorRequest;
 import com.mellenker.libraryapi.dto.AuthorResponse;
+import com.mellenker.libraryapi.dto.AuthorUpdateRequest;
 import com.mellenker.libraryapi.exception.AuthorNotFoundException;
 import com.mellenker.libraryapi.mapper.AuthorMapper;
 import com.mellenker.libraryapi.model.Author;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AuthorService {
@@ -41,18 +41,18 @@ public class AuthorService {
         repo.deleteById(id);
     }
 
-    public AuthorResponse updateAuthorByFields(Long id, Map<String, Object> fields) {
-        var author = repo.findById(id).orElseThrow(() -> new AuthorNotFoundException(id));
+    public AuthorResponse updateAuthor(Long id, AuthorUpdateRequest request) {
+        Author author = repo.findById(id).orElseThrow(() -> new AuthorNotFoundException(id));
 
         // Only update specified fields
-        if (fields.containsKey("name")) {
-            author.setName((String) fields.get("name"));
+        if (request.getName() != null) {
+            author.setName(request.getName());
         }
-        if (fields.containsKey("birthYear")) {
-            author.setBirthYear((Integer) fields.get("birthYear"));
+        if (request.getBirthYear() != null) {
+            author.setBirthYear(request.getBirthYear());
         }
-        if (fields.containsKey("bio")) {
-            author.setBio((String) fields.get("bio"));
+        if (request.getBio() != null) {
+            author.setBio(request.getBio());
         }
 
         return mapper.toResponse(repo.save(author));
