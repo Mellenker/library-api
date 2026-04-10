@@ -2,6 +2,7 @@ package com.mellenker.libraryapi.service;
 
 import com.mellenker.libraryapi.dto.AuthorRequest;
 import com.mellenker.libraryapi.dto.AuthorResponse;
+import com.mellenker.libraryapi.dto.AuthorUpdateRequest;
 import com.mellenker.libraryapi.exception.AuthorNotFoundException;
 import com.mellenker.libraryapi.mapper.AuthorMapper;
 import com.mellenker.libraryapi.model.Author;
@@ -34,20 +35,23 @@ public class AuthorServiceTests {
         AuthorRequest request = new AuthorRequest();
         request.setName("Fyodor Dostoevsky");
         request.setBirthYear(1821);
+        request.setBio("Fyodor Dostoevsky was a Russian writer, poet, and philosopher.");
 
         Author author = new Author();
         author.setId(1L);
-        request.setName("Fyodor Dostoevsky");
+        author.setName("Fyodor Dostoevsky");
         author.setBirthYear(1821);
+        author.setBio("Fyodor Dostoevsky was a Russian writer, poet, and philosopher.");
 
         AuthorResponse response = new AuthorResponse();
         response.setId(1L);
-        request.setName("Fyodor Dostoevsky");
+        response.setName("Fyodor Dostoevsky");
         response.setBirthYear(1821);
+        response.setBio("Fyodor Dostoevsky was a Russian writer, poet, and philosopher.");
 
         when(mapper.toEntity(request)).thenReturn(author);
-        when(mapper.toResponse(author)).thenReturn(response);
         when(repo.save(author)).thenReturn(author);
+        when(mapper.toResponse(author)).thenReturn(response);
 
         var result = service.addAuthor(request);
 
@@ -88,13 +92,28 @@ public class AuthorServiceTests {
         assertThrows(AuthorNotFoundException.class, () -> service.updateAuthor(id, null));
     }
 
-//    @Test
-//    void updateAuthorByFields_shouldOnlyUpdateNonNullFields_whenPartialRequestProvided() {
-//       Author existing = new Author();
-//       existing.setId(1L);
-//       existing.setName("Fyodor Dostoevsky");
-//       existing.setBirthYear(1821);
-//
-//       Author
-//    }
+    @Test
+    void updateAuthorByFields_shouldOnlyUpdateNonNullFields_whenPartialRequestProvided() {
+        long id = 1L;
+
+        AuthorUpdateRequest request = new AuthorUpdateRequest();
+        request.setBirthYear(200);
+        request.setBio("Hello World");
+
+        Author author = new Author();
+        author.setId(id);
+        author.setName("Fyodor Dostoevsky");
+        author.setBirthYear(1821);
+        author.setBio("Fyodor Dostoevsky was a Russian writer, poet, and philosopher.");
+
+        when(repo.findById(id)).thenReturn(Optional.of(author));
+        when(repo.save(author)).thenReturn(author);
+
+        service.updateAuthor(id, request);
+
+        assertEquals("Fyodor Dostoevsky", author.getName());
+        assertEquals(request.getBirthYear(), author.getBirthYear());
+        assertEquals(request.getBio(), author.getBio());
+        verify(repo).save(author);
+    }
 }
