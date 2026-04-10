@@ -59,9 +59,13 @@ table(books_authors) {
     foreign_key(book_id): bigint
     foreign_key(author_id): bigint
 }
-
+table(books_genres) {
+    foreign_key(book_id): bigint
+    foreign_key(genre_id): bigint
+}
 users ||--o{ loans
-books }o--|| genres
+books ||--o{ books_genres
+genres ||--o{ books_genres
 loans }o--|| books
 reservations }o--|| books
 users ||--o{ reservations
