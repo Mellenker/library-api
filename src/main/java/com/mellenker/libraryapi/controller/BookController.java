@@ -2,6 +2,7 @@ package com.mellenker.libraryapi.controller;
 
 import com.mellenker.libraryapi.dto.BookRequest;
 import com.mellenker.libraryapi.dto.BookResponse;
+import com.mellenker.libraryapi.dto.BookUpdateRequest;
 import com.mellenker.libraryapi.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    public ResponseEntity<BookResponse> addBook(BookRequest request) {
+    public ResponseEntity<BookResponse> addBook(@RequestBody BookRequest request) {
         var response = service.addBook(request);
         return ResponseEntity.created(URI.create("/books/" + response.getId())).body(response);
     }
@@ -39,5 +40,11 @@ public class BookController {
     public ResponseEntity<BookResponse> deleteBook(@PathVariable long id) {
         service.deleteBook(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/books/{id}")
+    public ResponseEntity<BookResponse> updateBook(@PathVariable long id, @RequestBody BookUpdateRequest request) {
+        var response = service.updateBook(id, request);
+        return ResponseEntity.ok(response);
     }
 }
