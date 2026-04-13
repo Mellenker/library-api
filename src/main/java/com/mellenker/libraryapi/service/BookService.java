@@ -2,6 +2,7 @@ package com.mellenker.libraryapi.service;
 
 import com.mellenker.libraryapi.dto.BookRequest;
 import com.mellenker.libraryapi.dto.BookResponse;
+import com.mellenker.libraryapi.exception.BookNotFoundException;
 import com.mellenker.libraryapi.mapper.BookMapper;
 import com.mellenker.libraryapi.model.Book;
 import com.mellenker.libraryapi.repository.BookRepo;
@@ -22,13 +23,14 @@ public class BookService {
     }
 
     public List<BookResponse> getBooks() {
-        List<Book> books = repo.findAll();
-        System.out.println(books);
-        List<BookResponse> hejma = repo.findAll().stream()
+        return repo.findAll().stream()
                 .map(mapper::toResponse)
                 .toList();
-        System.out.println(hejma);
-        return hejma;
+    }
+
+    public BookResponse getBookById(long id) {
+        Book book = repo.findById(id).orElseThrow(() -> new BookNotFoundException(id));
+        return mapper.toResponse(book);
     }
 
     public BookResponse addBook(BookRequest request) {
