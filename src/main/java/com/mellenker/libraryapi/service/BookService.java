@@ -1,5 +1,6 @@
 package com.mellenker.libraryapi.service;
 
+import com.mellenker.libraryapi.dto.BookRequest;
 import com.mellenker.libraryapi.dto.BookResponse;
 import com.mellenker.libraryapi.mapper.BookMapper;
 import com.mellenker.libraryapi.model.Book;
@@ -28,5 +29,14 @@ public class BookService {
                 .toList();
         System.out.println(hejma);
         return hejma;
+    }
+
+    public BookResponse addBook(BookRequest request) {
+        Book book = mapper.toEntity(request);
+        return mapper.toResponse(repo.save(book));
+    }
+
+    public void deleteBook(long id) {
+        repo.deleteById(id);
     }
 }

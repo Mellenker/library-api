@@ -1,11 +1,13 @@
 package com.mellenker.libraryapi.controller;
 
+import com.mellenker.libraryapi.dto.BookRequest;
 import com.mellenker.libraryapi.dto.BookResponse;
 import com.mellenker.libraryapi.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -20,5 +22,17 @@ public class BookController {
     @GetMapping("/books")
     public List<BookResponse> getBooks() {
         return service.getBooks();
+    }
+
+    @PostMapping("/books")
+    public ResponseEntity<BookResponse> addBook(BookRequest request) {
+        var response = service.addBook(request);
+        return ResponseEntity.created(URI.create("/books/" + response.getId())).body(response);
+    }
+
+    @DeleteMapping("/books/{id}")
+    public ResponseEntity<BookResponse> deleteBook(@PathVariable long id) {
+        service.deleteBook(id);
+        return ResponseEntity.noContent().build();
     }
 }
