@@ -71,6 +71,9 @@ public class BookService {
         if (request.getAvailableCopies() != null) {
             book.setAvailableCopies(request.getAvailableCopies());
         }
+        if (request.getAuthorIds() != null) {
+            book.setAuthors(authorRepo.findAllById(request.getAuthorIds()));
+        }
 
         return mapper.toResponse(bookRepo.save(book));
     }

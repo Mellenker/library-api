@@ -2,6 +2,8 @@ package com.mellenker.libraryapi.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class BookUpdateRequest {
     private String title;
@@ -10,4 +12,5 @@ public class BookUpdateRequest {
     private String description;
     private String coverImageUrl;
     private Integer availableCopies;
+    private List<Long> authorIds;
 }
