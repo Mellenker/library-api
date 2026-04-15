@@ -3,6 +3,7 @@ package com.mellenker.libraryapi.service;
 import com.mellenker.libraryapi.dto.BookRequest;
 import com.mellenker.libraryapi.dto.BookResponse;
 import com.mellenker.libraryapi.dto.BookUpdateRequest;
+import com.mellenker.libraryapi.exception.AuthorNotFoundException;
 import com.mellenker.libraryapi.exception.BookNotFoundException;
 import com.mellenker.libraryapi.mapper.BookMapper;
 import com.mellenker.libraryapi.model.Author;
@@ -15,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +32,7 @@ public class BookServiceTests {
     @Mock
     AuthorRepo authorRepo;
     @Mock
-    BookMapper mapper;
+    BookMapper bookMapper;
     @InjectMocks
     BookService service;
 
@@ -56,17 +58,19 @@ public class BookServiceTests {
         response.setId(1L);
         response.setTitle("Crime and Punishment");
 
-        when(mapper.toEntity(request)).thenReturn(book);
-        when(authorRepo.findAllById(request.getAuthorIds())).thenReturn(List.of(author));
+        when(bookMapper.toEntity(request)).thenReturn(book);
+        when(authorRepo.findById(1L)).thenReturn(Optional.of(author));
         when(bookRepo.save(book)).thenReturn(savedBook);
-        when(mapper.toResponse(savedBook)).thenReturn(response);
+        when(bookMapper.toResponse(savedBook)).thenReturn(response);
 
         BookResponse result = service.addBook(request);
 
         assertEquals(response.getId(), result.getId());
         assertEquals(response.getTitle(), result.getTitle());
         verify(bookRepo).save(book);
-        verify(authorRepo).findAllById(request.getAuthorIds());
+        for (Long authorId : request.getAuthorIds()) {
+            verify(authorRepo).findById(authorId);
+        }
     }
 
     @Test
@@ -85,12 +89,12 @@ public class BookServiceTests {
         response.setId(id);
 
         when(bookRepo.findById(id)).thenReturn(Optional.of(book));
-        when(mapper.toResponse(book)).thenReturn(response);
+        when(bookMapper.toResponse(book)).thenReturn(response);
 
         BookResponse result = service.getBookById(id);
 
         assertEquals(response.getId(), result.getId());
-        verify(mapper).toResponse(book);
+        verify(bookMapper).toResponse(book);
     }
 
     @Test
@@ -124,4 +128,19 @@ public class BookServiceTests {
         assertEquals(10, book.getAvailableCopies());
         verify(bookRepo).save(book);
     }
+
+    @Test
+    void addBook_shouldThrowAuthorNotFoundException_whenInvalidAuthorIdProvided() {
+        long id = 1L;
+
+        BookRequest request = new BookRequest();
+        request.setAuthorIds(List.of(id));
+
+        Book book = new Book();
+        when(bookMapper.toEntity(request)).thenReturn(book);
+        when(authorRepo.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(AuthorNotFoundException.class, () -> service.addBook(request));
+    }
+
 }
