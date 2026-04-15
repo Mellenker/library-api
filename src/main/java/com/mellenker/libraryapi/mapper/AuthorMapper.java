@@ -12,5 +12,5 @@ public interface AuthorMapper {
 
     AuthorResponse toResponse(Author author);
 
-    AuthorSummary tosummary(Author author);
+    AuthorSummary toSummary(Author author);
 }
