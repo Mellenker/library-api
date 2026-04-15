@@ -1,9 +1,11 @@
 package com.mellenker.libraryapi.service;
 
+import com.mellenker.libraryapi.dto.AuthorResponse;
 import com.mellenker.libraryapi.dto.BookRequest;
 import com.mellenker.libraryapi.dto.BookResponse;
 import com.mellenker.libraryapi.dto.BookUpdateRequest;
 import com.mellenker.libraryapi.exception.BookNotFoundException;
+import com.mellenker.libraryapi.mapper.AuthorMapper;
 import com.mellenker.libraryapi.mapper.BookMapper;
 import com.mellenker.libraryapi.model.Author;
 import com.mellenker.libraryapi.model.Book;
@@ -18,32 +20,34 @@ import java.util.List;
 public class BookService {
     private final BookRepo bookRepo;
     private final AuthorRepo authorRepo;
-    private final BookMapper mapper;
+    private final BookMapper bookMapper;
+    private final AuthorMapper authorMapper;
 
 
     @Autowired
-    public BookService(BookRepo bookRepo, AuthorRepo authorRepo, BookMapper mapper) {
+    public BookService(BookRepo bookRepo, AuthorRepo authorRepo, BookMapper bookMapper, AuthorMapper authorMapper) {
         this.bookRepo = bookRepo;
         this.authorRepo = authorRepo;
-        this.mapper = mapper;
+        this.bookMapper = bookMapper;
+        this.authorMapper = authorMapper;
     }
 
     public List<BookResponse> getBooks() {
         return bookRepo.findAll().stream()
-                .map(mapper::toResponse)
+                .map(bookMapper::toResponse)
                 .toList();
     }
 
     public BookResponse getBookById(long id) {
         Book book = bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException(id));
-        return mapper.toResponse(book);
+        return bookMapper.toResponse(book);
     }
 
     public BookResponse addBook(BookRequest request) {
-        Book book = mapper.toEntity(request);
+        Book book = bookMapper.toEntity(request);
         List<Author> authors = authorRepo.findAllById(request.getAuthorIds());
         book.setAuthors(authors);
-        return mapper.toResponse(bookRepo.save(book));
+        return bookMapper.toResponse(bookRepo.save(book));
     }
 
     public void deleteBook(long id) {
@@ -75,6 +79,11 @@ public class BookService {
             book.setAuthors(authorRepo.findAllById(request.getAuthorIds()));
         }
 
-        return mapper.toResponse(bookRepo.save(book));
+        return bookMapper.toResponse(bookRepo.save(book));
+    }
+
+    public List<AuthorResponse> getAuthorsByBookId(long id) {
+        Book book = bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException(id));
+        return book.getAuthors().stream().map(authorMapper::toResponse).toList();
     }
 }

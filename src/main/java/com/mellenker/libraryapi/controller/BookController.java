@@ -1,5 +1,6 @@
 package com.mellenker.libraryapi.controller;
 
+import com.mellenker.libraryapi.dto.AuthorResponse;
 import com.mellenker.libraryapi.dto.BookRequest;
 import com.mellenker.libraryapi.dto.BookResponse;
 import com.mellenker.libraryapi.dto.BookUpdateRequest;
@@ -21,13 +22,18 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public List<BookResponse> getBooks() {
-        return service.getBooks();
+    public ResponseEntity<List<BookResponse>> getBooks() {
+        return ResponseEntity.ok(service.getBooks());
     }
 
     @GetMapping("/books/{id}")
     public ResponseEntity<BookResponse> getBookById(@PathVariable long id) {
         return ResponseEntity.ok(service.getBookById(id));
+    }
+
+    @GetMapping("/books/{id}/authors")
+    public ResponseEntity<List<AuthorResponse>> getAuthorsByBookId(@PathVariable long id) {
+        return ResponseEntity.ok(service.getAuthorsByBookId(id));
     }
 
     @PostMapping("/books")
