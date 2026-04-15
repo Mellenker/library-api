@@ -1,11 +1,10 @@
 package com.mellenker.libraryapi.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "authors")
@@ -20,4 +19,6 @@ public class Author {
     private Integer birthYear;
     private String bio;
 
+    @ManyToMany(mappedBy = "authors")
+    private List<Book> books = new ArrayList<>();
 }

@@ -5,7 +5,7 @@ import com.mellenker.libraryapi.dto.BookResponse;
 import com.mellenker.libraryapi.model.Book;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {AuthorMapper.class})
 public interface BookMapper {
     Book toEntity(BookRequest request);
 
