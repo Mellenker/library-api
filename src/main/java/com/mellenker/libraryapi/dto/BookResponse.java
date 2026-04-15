@@ -15,5 +15,5 @@ public class BookResponse {
     private String coverImageUrl;
     private Integer availableCopies;
 
-    private List<AuthorResponse> authors;
+    private List<AuthorSummary> authors;
 }
