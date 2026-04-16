@@ -16,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,16 +37,16 @@ public class BookServiceTests {
 
     @Test
     void addBook_shouldSetAuthorsAndReturnResponse_whenValidRequestProvided() {
-        BookRequest request = new BookRequest();
-        request.setTitle("Crime and Punishment");
-        request.setAuthorIds(List.of(1L));
+        Author author = new Author();
+        author.setId(1L);
+        author.setName("Fyodor Dostoevsky");
 
         Book book = new Book();
         book.setTitle("Crime and Punishment");
 
-        Author author = new Author();
-        author.setId(1L);
-        author.setName("Fyodor Dostoevsky");
+        BookRequest request = new BookRequest();
+        request.setTitle("Crime and Punishment");
+        request.setAuthorIds(List.of(1L));
 
         Book savedBook = new Book();
         savedBook.setId(1L);
