@@ -3,7 +3,7 @@ package com.mellenker.libraryapi.mapper;
 import com.mellenker.libraryapi.dto.BookRequest;
 import com.mellenker.libraryapi.dto.BookResponse;
 import com.mellenker.libraryapi.dto.BookSummary;
-import com.mellenker.libraryapi.model.Book;
+import com.mellenker.libraryapi.entity.Book;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring", uses = {AuthorMapper.class})

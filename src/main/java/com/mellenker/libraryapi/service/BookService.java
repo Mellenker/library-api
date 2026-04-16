@@ -8,8 +8,8 @@ import com.mellenker.libraryapi.exception.AuthorNotFoundException;
 import com.mellenker.libraryapi.exception.BookNotFoundException;
 import com.mellenker.libraryapi.mapper.AuthorMapper;
 import com.mellenker.libraryapi.mapper.BookMapper;
-import com.mellenker.libraryapi.model.Author;
-import com.mellenker.libraryapi.model.Book;
+import com.mellenker.libraryapi.entity.Author;
+import com.mellenker.libraryapi.entity.Book;
 import com.mellenker.libraryapi.repository.AuthorRepo;
 import com.mellenker.libraryapi.repository.BookRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,12 +48,14 @@ public class BookService {
     public BookResponse addBook(BookRequest request) {
         Book book = bookMapper.toEntity(request);
 
-        List<Author> authors = new ArrayList<>();
-        for (Long authorId : request.getAuthorIds()) {
-            authors.add(authorRepo.findById(authorId).orElseThrow(() -> new AuthorNotFoundException(authorId)));
+        if (request.getAuthorIds() != null) {
+            List<Author> authors = new ArrayList<>();
+            for (Long authorId : request.getAuthorIds()) {
+                authors.add(authorRepo.findById(authorId).orElseThrow(() -> new AuthorNotFoundException(authorId)));
+            }
+            book.setAuthors(authors);
         }
 
-        book.setAuthors(authors);
         return bookMapper.toResponse(bookRepo.save(book));
     }
 

@@ -1,4 +1,4 @@
-package com.mellenker.libraryapi.model;
+package com.mellenker.libraryapi.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -5,7 +5,7 @@ import com.mellenker.libraryapi.dto.AuthorResponse;
 import com.mellenker.libraryapi.dto.AuthorUpdateRequest;
 import com.mellenker.libraryapi.exception.AuthorNotFoundException;
 import com.mellenker.libraryapi.mapper.AuthorMapper;
-import com.mellenker.libraryapi.model.Author;
+import com.mellenker.libraryapi.entity.Author;
 import com.mellenker.libraryapi.repository.AuthorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
