@@ -4,6 +4,7 @@ import com.mellenker.libraryapi.dto.AuthorRequest;
 import com.mellenker.libraryapi.dto.AuthorResponse;
 import com.mellenker.libraryapi.dto.AuthorUpdateRequest;
 import com.mellenker.libraryapi.service.AuthorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class AuthorController {
     }
 
     @PostMapping("/authors")
-    public ResponseEntity<AuthorResponse> addAuthor(@RequestBody AuthorRequest request) {
+    public ResponseEntity<AuthorResponse> addAuthor(@RequestBody @Valid AuthorRequest request) {
         var response = service.addAuthor(request);
         return ResponseEntity.created(URI.create("/authors/" + response.getId())).body(response);
     }
