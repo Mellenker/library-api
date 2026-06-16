@@ -44,7 +44,7 @@ public class AuthorController {
     }
 
     @PatchMapping("/authors/{id}")
-    public ResponseEntity<AuthorResponse> updateAuthor(@PathVariable long id, @RequestBody AuthorUpdateRequest request) {
+    public ResponseEntity<AuthorResponse> updateAuthor(@PathVariable long id, @RequestBody @Valid AuthorUpdateRequest request) {
         var response = service.updateAuthor(id, request);
         return ResponseEntity.ok(response);
     }
