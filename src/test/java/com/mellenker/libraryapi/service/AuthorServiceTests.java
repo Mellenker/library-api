@@ -3,9 +3,12 @@ package com.mellenker.libraryapi.service;
 import com.mellenker.libraryapi.dto.AuthorRequest;
 import com.mellenker.libraryapi.dto.AuthorResponse;
 import com.mellenker.libraryapi.dto.AuthorUpdateRequest;
+import com.mellenker.libraryapi.dto.BookResponse;
 import com.mellenker.libraryapi.exception.AuthorNotFoundException;
 import com.mellenker.libraryapi.mapper.AuthorMapper;
+import com.mellenker.libraryapi.mapper.BookMapper;
 import com.mellenker.libraryapi.entity.Author;
+import com.mellenker.libraryapi.entity.Book;
 import com.mellenker.libraryapi.repository.AuthorRepo;
 
 import org.junit.jupiter.api.Test;
@@ -19,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,6 +31,8 @@ public class AuthorServiceTests {
     AuthorRepo repo;
     @Mock
     AuthorMapper mapper;
+    @Mock
+    BookMapper bookMapper;
     @InjectMocks
     AuthorService service;
 
@@ -83,6 +89,32 @@ public class AuthorServiceTests {
 
         assertEquals(response.getId(), result.getId());
         verify(mapper).toResponse(author);
+    }
+
+    @Test
+    void getBooksByAuthorId_shouldReturnBooks_whenAuthorExists() {
+        long id = 1L;
+
+        Author author = new Author();
+        author.setId(id);
+
+        Book book = new Book();
+        book.setId(10L);
+        book.setTitle("Crime and Punishment");
+        author.setBooks(List.of(book));
+
+        BookResponse response = new BookResponse();
+        response.setId(10L);
+        response.setTitle("Crime and Punishment");
+
+        when(repo.findById(id)).thenReturn(Optional.of(author));
+        when(bookMapper.toResponse(book)).thenReturn(response);
+
+        List<BookResponse> result = service.getBooksByAuthorId(id);
+
+        assertEquals(1, result.size());
+        assertEquals(response.getId(), result.get(0).getId());
+        verify(bookMapper).toResponse(book);
     }
 
     @Test

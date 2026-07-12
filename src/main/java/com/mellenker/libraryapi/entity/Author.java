@@ -18,6 +18,6 @@ public class Author {
     private Integer birthYear;
     private String bio;
 
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
     private List<Book> books = new ArrayList<>();
 }

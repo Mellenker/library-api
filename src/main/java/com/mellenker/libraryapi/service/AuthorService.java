@@ -2,9 +2,12 @@ package com.mellenker.libraryapi.service;
 
 import com.mellenker.libraryapi.dto.AuthorRequest;
 import com.mellenker.libraryapi.dto.AuthorResponse;
+import com.mellenker.libraryapi.dto.AuthorSummary;
 import com.mellenker.libraryapi.dto.AuthorUpdateRequest;
+import com.mellenker.libraryapi.dto.BookResponse;
 import com.mellenker.libraryapi.exception.AuthorNotFoundException;
 import com.mellenker.libraryapi.mapper.AuthorMapper;
+import com.mellenker.libraryapi.mapper.BookMapper;
 import com.mellenker.libraryapi.entity.Author;
 import com.mellenker.libraryapi.repository.AuthorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +19,17 @@ import java.util.List;
 public class AuthorService {
     private final AuthorRepo repo;
     private final AuthorMapper mapper;
+    private final BookMapper bookMapper;
 
     @Autowired
-    public AuthorService(AuthorRepo repo, AuthorMapper mapper) {
+    public AuthorService(AuthorRepo repo, AuthorMapper mapper, BookMapper bookMapper) {
         this.repo = repo;
         this.mapper = mapper;
+        this.bookMapper = bookMapper;
     }
 
-    public List<AuthorResponse> getAuthors() {
-        return repo.findAll().stream().map(mapper::toResponse).toList();
+    public List<AuthorSummary> getAuthors() {
+        return repo.findAll().stream().map(mapper::toSummary).toList();
     }
 
     public AuthorResponse getAuthorById(long id) {
@@ -56,5 +61,10 @@ public class AuthorService {
         }
 
         return mapper.toResponse(repo.save(author));
+    }
+
+    public List<BookResponse> getBooksByAuthorId(long id) {
+        Author author = repo.findById(id).orElseThrow(() -> new AuthorNotFoundException(id));
+        return author.getBooks().stream().map(bookMapper::toResponse).toList();
     }
 }
