@@ -1,8 +1,9 @@
 package com.mellenker.libraryapi.controller;
 
-import com.mellenker.libraryapi.dto.AuthorResponse;
+import com.mellenker.libraryapi.dto.AuthorSummary;
 import com.mellenker.libraryapi.dto.BookRequest;
 import com.mellenker.libraryapi.dto.BookResponse;
+import com.mellenker.libraryapi.dto.BookSummary;
 import com.mellenker.libraryapi.dto.BookUpdateRequest;
 import com.mellenker.libraryapi.service.BookService;
 import jakarta.validation.Valid;
@@ -23,7 +24,7 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public ResponseEntity<List<BookResponse>> getBooks() {
+    public ResponseEntity<List<BookSummary>> getBooks() {
         return ResponseEntity.ok(service.getBooks());
     }
 
@@ -33,7 +34,7 @@ public class BookController {
     }
 
     @GetMapping("/books/{id}/authors")
-    public ResponseEntity<List<AuthorResponse>> getAuthorsByBookId(@PathVariable long id) {
+    public ResponseEntity<List<AuthorSummary>> getAuthorsByBookId(@PathVariable long id) {
         return ResponseEntity.ok(service.getAuthorsByBookId(id));
     }
 

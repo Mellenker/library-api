@@ -4,7 +4,7 @@ import com.mellenker.libraryapi.dto.AuthorRequest;
 import com.mellenker.libraryapi.dto.AuthorResponse;
 import com.mellenker.libraryapi.dto.AuthorSummary;
 import com.mellenker.libraryapi.dto.AuthorUpdateRequest;
-import com.mellenker.libraryapi.dto.BookResponse;
+import com.mellenker.libraryapi.dto.BookSummary;
 import com.mellenker.libraryapi.service.AuthorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class AuthorController {
     }
 
     @GetMapping("/authors/{id}/books")
-    public ResponseEntity<List<BookResponse>> getBooksByAuthorId(@PathVariable long id) {
+    public ResponseEntity<List<BookSummary>> getBooksByAuthorId(@PathVariable long id) {
         return ResponseEntity.ok(service.getBooksByAuthorId(id));
     }
 

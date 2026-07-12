@@ -4,7 +4,7 @@ import com.mellenker.libraryapi.dto.AuthorRequest;
 import com.mellenker.libraryapi.dto.AuthorResponse;
 import com.mellenker.libraryapi.dto.AuthorSummary;
 import com.mellenker.libraryapi.dto.AuthorUpdateRequest;
-import com.mellenker.libraryapi.dto.BookResponse;
+import com.mellenker.libraryapi.dto.BookSummary;
 import com.mellenker.libraryapi.exception.AuthorNotFoundException;
 import com.mellenker.libraryapi.mapper.AuthorMapper;
 import com.mellenker.libraryapi.mapper.BookMapper;
@@ -63,8 +63,8 @@ public class AuthorService {
         return mapper.toResponse(repo.save(author));
     }
 
-    public List<BookResponse> getBooksByAuthorId(long id) {
+    public List<BookSummary> getBooksByAuthorId(long id) {
         Author author = repo.findById(id).orElseThrow(() -> new AuthorNotFoundException(id));
-        return author.getBooks().stream().map(bookMapper::toResponse).toList();
+        return author.getBooks().stream().map(bookMapper::toSummary).toList();
     }
 }

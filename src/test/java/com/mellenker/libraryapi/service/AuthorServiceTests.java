@@ -3,7 +3,7 @@ package com.mellenker.libraryapi.service;
 import com.mellenker.libraryapi.dto.AuthorRequest;
 import com.mellenker.libraryapi.dto.AuthorResponse;
 import com.mellenker.libraryapi.dto.AuthorUpdateRequest;
-import com.mellenker.libraryapi.dto.BookResponse;
+import com.mellenker.libraryapi.dto.BookSummary;
 import com.mellenker.libraryapi.exception.AuthorNotFoundException;
 import com.mellenker.libraryapi.mapper.AuthorMapper;
 import com.mellenker.libraryapi.mapper.BookMapper;
@@ -103,18 +103,18 @@ public class AuthorServiceTests {
         book.setTitle("Crime and Punishment");
         author.setBooks(List.of(book));
 
-        BookResponse response = new BookResponse();
+        BookSummary response = new BookSummary();
         response.setId(10L);
         response.setTitle("Crime and Punishment");
 
         when(repo.findById(id)).thenReturn(Optional.of(author));
-        when(bookMapper.toResponse(book)).thenReturn(response);
+        when(bookMapper.toSummary(book)).thenReturn(response);
 
-        List<BookResponse> result = service.getBooksByAuthorId(id);
+        List<BookSummary> result = service.getBooksByAuthorId(id);
 
         assertEquals(1, result.size());
         assertEquals(response.getId(), result.get(0).getId());
-        verify(bookMapper).toResponse(book);
+        verify(bookMapper).toSummary(book);
     }
 
     @Test

@@ -1,8 +1,9 @@
 package com.mellenker.libraryapi.service;
 
-import com.mellenker.libraryapi.dto.AuthorResponse;
+import com.mellenker.libraryapi.dto.AuthorSummary;
 import com.mellenker.libraryapi.dto.BookRequest;
 import com.mellenker.libraryapi.dto.BookResponse;
+import com.mellenker.libraryapi.dto.BookSummary;
 import com.mellenker.libraryapi.dto.BookUpdateRequest;
 import com.mellenker.libraryapi.exception.AuthorNotFoundException;
 import com.mellenker.libraryapi.exception.BookNotFoundException;
@@ -34,9 +35,9 @@ public class BookService {
         this.authorMapper = authorMapper;
     }
 
-    public List<BookResponse> getBooks() {
+    public List<BookSummary> getBooks() {
         return bookRepo.findAll().stream()
-                .map(bookMapper::toResponse)
+                .map(bookMapper::toSummary)
                 .toList();
     }
 
@@ -91,8 +92,8 @@ public class BookService {
         return bookMapper.toResponse(bookRepo.save(book));
     }
 
-    public List<AuthorResponse> getAuthorsByBookId(long id) {
+    public List<AuthorSummary> getAuthorsByBookId(long id) {
         Book book = bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException(id));
-        return book.getAuthors().stream().map(authorMapper::toResponse).toList();
+        return book.getAuthors().stream().map(authorMapper::toSummary).toList();
     }
 }
